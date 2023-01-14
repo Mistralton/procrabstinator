@@ -47,7 +47,7 @@ fn main() -> Result<()> {
     //   .run(tauri::generate_context!())
     //   .expect("error while running tauri application");
 
-    let conn = Connection::open("../procrabstinate.db")?;
+    let conn = Connection::open("./procrabstinate.db")?;
 
     conn.execute("INSERT INTO Items (Name, DueDate, PriorityValue, SubmissionStatus, DateAdded) values ('test', 'test', 'test', 1, 'test');", []);
 
