@@ -6,59 +6,79 @@
 // use rusqlite::NO_PARAMS;
 use rusqlite::{Connection, Result};
 
-// pub struct Items {
-//     fname: String,
-// }
+#[derive(Debug)]
+struct Item {
+    Id: i32,
+    Name: String,
+    DueDate: String,
+    PriorityValue: String,
+    SubmissionStatus: i32,
+    GradeReceived: Option<String>,
+    DateAdded: String,
+    DateFinished: Option<String>,
+}
 
-// #[derive(Debug)]
-// pub enum ItemsErr {
-//     DbErr(sqErr),
-// }
-
-// impl From<sqErr> for ItemsErr {
-//     fn from(s: sqErr) -> Self {
-//         ItemsErr::DbErr(s)
-//     }
-// }
-
-// impl Items {
-//     pub fn add(
-//         &self,
-//         Name: &str,
-//         DueDate: &str,
-//         PriorityValue: &str,
-//         SubmissionStatus: i32,
-//         DateAdded: &str,
-//     ) -> Result<(), ItemsErr> {
-//         let connection = sqlite::open(&self.fname)?;
-//         let mut db = connection.prepare("INSERT INTO Items (Name, DueDate, PriorityValue, SubmissionStatus, DateAdded) values (?, ?, ?, ?, ?);").unwrap();
-//         db.bind(1, Name).unwrap();
-//         db.bind(2, DueDate)?;
-//         db.bind(3, PriorityValue)?;
-//         db.bind(4, SubmissionStatus)?;
-//         db.bind(5, DateAdded)?;
-//         db.next()?;
-//         Ok(())
-//     }
-// }
-
-fn main() -> Result<()> {
-    // tauri::Builder::default()
-    //   .run(tauri::generate_context!())
-    //   .expect("error while running tauri application");
-
+#[tauri::command]
+fn insertItem(
+    name: &str,
+    due_date: &str,
+    priority_val: &str,
+    submit_status: i32,
+    date_added: &str,
+) -> Result<()> {
     let conn = Connection::open("./procrabstinate.db")?;
 
     conn.execute("INSERT INTO Items (Name, DueDate, PriorityValue, SubmissionStatus, DateAdded) values ('test', 'test', 'test', 1, 'test');", []);
 
     Ok(())
+}
 
-    // let DB = Items {
-    //     fname: String::from("../procrabstinate.db"),
-    // };
+#[tauri::command]
+fn insertItemOptional(
+    name: &str,
+    due_date: &str,
+    priority_val: &str,
+    submit_status: i32,
+    date_added: &str,
+    grade_received: Option<&str>,
+    date_fin: Option<&str>,
+) -> Result<()> {
+    let conn = Connection::open("./procrabstinate.db")?;
 
-    // match DB.add("test", "2000-01-01", "test", 1, "2000-01-01") {
-    //     Ok(_) => println!("success"),
-    //     Err(ItemsErr::DbErr(ref err)) => println!(":( {:?}", err),
-    // }
+    conn.execute("INSERT INTO Items (Name, DueDate, PriorityValue, SubmissionStatus, DateAdded) values ('test', 'test', 'test', 1, 'test');", []);
+
+    Ok(())
+}
+
+#[tauri::command]
+fn getAll() -> Result<()> {
+    let conn = Connection::open("./procrabstinate.db")?;
+
+    let mut stmt = conn.prepare("SELECT * FROM Items;")?;
+
+    let queryResult = stmt.query_map([], |row| {
+        Ok(Item {
+            Id: row.get(0)?,
+            Name: row.get(1)?,
+            DueDate: row.get(2)?,
+            PriorityValue: row.get(3)?,
+            SubmissionStatus: row.get(4)?,
+            GradeReceived: row.get(5)?,
+            DateAdded: row.get(6)?,
+            DateFinished: row.get(7)?,
+        })
+    })?;
+
+    for item in queryResult {
+        println!("{:?}", item)
+    }
+
+    Ok(())
+}
+
+fn main() {
+    // tauri::Builder::default()
+    //     .run(tauri::generate_context!())
+    //     .expect("error while running tauri application");
+    insertItem("test", "test", "test", 1, "test");
 }
