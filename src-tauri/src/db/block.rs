@@ -13,7 +13,7 @@ use tauri::command;
 
 #[derive(Serialize)]
 #[derive(Debug)]
-struct Block {
+pub struct Block {
     app_id: i32,
     name: String,
     app_type: String,
@@ -38,13 +38,13 @@ use super::command_error::{CommandResult};
 // }
 
 #[command]
-pub fn get_all() -> CommandResult<serde_json::Value> {
+pub fn get_all_block() -> CommandResult<serde_json::Value> {
     let conn = Connection::open("./procrabstinate.db")?;
 
     let mut stmt = conn.prepare("SELECT * FROM Block;")?;
 
     let query_result = stmt.query_map([], |row| {
-        Ok(Item {
+        Ok(Block {
             app_id: row.get(0)?,
             name: row.get(1)?,
             app_type: row.get(2)?,
@@ -64,16 +64,16 @@ pub fn get_all() -> CommandResult<serde_json::Value> {
 }
 
 #[command]
-pub fn get_item(name: &str) -> CommandResult<serde_json::Value> {
+pub fn get_item_from_block(name: &str) -> CommandResult<serde_json::Value> {
     let conn = Connection::open("./procrabstinate.db").expect("Connection failed");
 
-    let mut stmt = conn.prepare("SELECT * FROM Block where Name = ?;")?;
+    let mut stmt = conn.prepare("SELECT * FROM Block where name = ?;")?;
     let mut rows = stmt.query(rusqlite::params![name])?;
 
     let mut items_list = Vec::new();
 
     while let Some(row) = rows.next()? {
-        items_list.push(Item {
+        items_list.push(Block {
           app_id: row.get(0)?,
           name: row.get(1)?,
           app_type: row.get(2)?,

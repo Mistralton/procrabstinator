@@ -55,6 +55,8 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "axum",
+ "axum-macros",
+ "http",
  "rusqlite",
  "serde",
  "serde_json",
@@ -62,6 +64,7 @@ dependencies = [
  "tauri-build",
  "thiserror",
  "tokio",
+ "tower-http",
 ]
 
 [[package]]
@@ -153,6 +156,18 @@ dependencies = [
  "rustversion",
  "tower-layer",
  "tower-service",
+]
+
+[[package]]
+name = "axum-macros"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cc7d7c3e69f305217e317a28172aab29f275667f2e1c15b87451e134fe27c7b1"
+dependencies = [
+ "heck 0.4.0",
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]

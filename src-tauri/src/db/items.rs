@@ -2,7 +2,7 @@ use rusqlite::{Connection, Result};
 use serde::Serialize;
 use tauri::command;
 
-use super::command_error::{CommandResult};
+use super::command_error::CommandResult;
 
 #[derive(Serialize)]
 #[derive(Debug)]
@@ -27,7 +27,7 @@ struct Item {
 // ) -> Result<()> {
 //     let conn = Connection::open("./procrabstinate.db")?;
 
-//     conn.execute("INSERT INTO Items (Name, Due_Date, Priority_Value, Submission_Status, Date_Added) values ('test', 'test', 'test', 1, 'test');", []);
+//     conn.execute("INSERT INTO Items (name, due_date, priority_val, submit_status, date_added) values ('test', 'test', 'test', 1, 'test');", []);
 
 //     Ok(())
 // }
@@ -42,7 +42,6 @@ struct Item {
 // 	"date_finished"	TEXT,
 // 	PRIMARY KEY("id" AUTOINCREMENT)
 // )
-
 
 #[command]
 pub fn get_all() -> CommandResult<serde_json::Value> {
@@ -76,7 +75,7 @@ pub fn get_all() -> CommandResult<serde_json::Value> {
 pub fn get_item(name: &str) -> CommandResult<serde_json::Value> {
     let conn = Connection::open("./procrabstinate.db").expect("Connection failed");
 
-    let mut stmt = conn.prepare("SELECT * FROM Items where Name = ?;")?;
+    let mut stmt = conn.prepare("SELECT * FROM Items where name = ?;")?;
     let mut rows = stmt.query(rusqlite::params![name])?;
 
     let mut items_list = Vec::new();
