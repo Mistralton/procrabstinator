@@ -2,9 +2,6 @@
     all(not(debug_assertions), target_os = "windows"),
     windows_subsystem = "windows"
 )]
-use std::io::Read;
-use std::net::TcpListener;
-use std::net::TcpStream;
 
 // use rusqlite::NO_PARAMS;
 mod db;

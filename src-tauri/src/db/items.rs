@@ -2,54 +2,47 @@ use rusqlite::{Connection, Result};
 use serde::Serialize;
 use tauri::command;
 
+use super::command_error::{CommandResult};
+
 #[derive(Serialize)]
 #[derive(Debug)]
 struct Item {
-    Id: i32,
-    Name: String,
-    DueDate: String,
-    PriorityValue: String,
-    SubmissionStatus: i32,
-    GradeReceived: Option<String>,
-    DateAdded: String,
-    DateFinished: Option<String>,
+    id: i32,
+    name: String,
+    due_date: String,
+    priority_value: String,
+    submission_status: i32,
+    date_added: String,
+    date_finished: Option<String>,
 }
 
-#[command]
-pub fn insert_item(
-    name: &str,
-    due_date: &str,
-    priority_val: &str,
-    submit_status: i32,
-    date_added: &str,
-    grade_received: Option<&str>,
-    date_fin: Option<&str>,
-) -> Result<()> {
-    let conn = Connection::open("./procrabstinate.db")?;
+// #[command]
+// pub fn insert_item(
+//     name: &str,
+//     due_date: &str,
+//     priority_val: &str,
+//     submit_status: i32,
+//     date_added: &str,
+//     date_fin: Option<&str>,
+// ) -> Result<()> {
+//     let conn = Connection::open("./procrabstinate.db")?;
 
-    conn.execute("INSERT INTO Items (Name, DueDate, PriorityValue, SubmissionStatus, DateAdded) values ('test', 'test', 'test', 1, 'test');", []);
+//     conn.execute("INSERT INTO Items (Name, Due_Date, Priority_Value, Submission_Status, Date_Added) values ('test', 'test', 'test', 1, 'test');", []);
 
-    Ok(())
-}
+//     Ok(())
+// }
 
+// CREATE TABLE "Items" (
+// 	"id"	INTEGER UNIQUE,
+// 	"name"	TEXT NOT NULL,
+// 	"due_date"	TEXT NOT NULL,
+// 	"priority_value"	TEXT NOT NULL,
+// 	"submission_status"	INTEGER NOT NULL,
+// 	"date_added"	TEXT NOT NULL,
+// 	"date_finished"	TEXT,
+// 	PRIMARY KEY("id" AUTOINCREMENT)
+// )
 
-#[derive(Debug, thiserror::Error)]
-pub enum CommandError {
-  #[error(transparent)]
-  RusqliteError(#[from] rusqlite::Error),
-}
-
-impl serde::Serialize for CommandError {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-      S: serde::ser::Serializer,
-    {
-      serializer.serialize_str(self.to_string().as_ref())
-    }
-}
-
-
-pub type CommandResult<T, E = CommandError> = anyhow::Result<T, E>;
 
 #[command]
 pub fn get_all() -> CommandResult<serde_json::Value> {
@@ -59,14 +52,13 @@ pub fn get_all() -> CommandResult<serde_json::Value> {
 
     let query_result = stmt.query_map([], |row| {
         Ok(Item {
-            Id: row.get(0)?,
-            Name: row.get(1)?,
-            DueDate: row.get(2)?,
-            PriorityValue: row.get(3)?,
-            SubmissionStatus: row.get(4)?,
-            GradeReceived: row.get(5)?,
-            DateAdded: row.get(6)?,
-            DateFinished: row.get(7)?,
+            id: row.get(0)?,
+            name: row.get(1)?,
+            due_date: row.get(2)?,
+            priority_value: row.get(3)?,
+            submission_status: row.get(4)?,
+            date_added: row.get(5)?,
+            date_finished: row.get(6)?,
         })
     })?;
 
@@ -91,14 +83,13 @@ pub fn get_item(name: &str) -> CommandResult<serde_json::Value> {
 
     while let Some(row) = rows.next()? {
         items_list.push(Item {
-            Id: row.get(0)?,
-            Name: row.get(1)?,
-            DueDate: row.get(2)?,
-            PriorityValue: row.get(3)?,
-            SubmissionStatus: row.get(4)?,
-            GradeReceived: row.get(5)?,
-            DateAdded: row.get(6)?,
-            DateFinished: row.get(7)?,
+          id: row.get(0)?,
+          name: row.get(1)?,
+          due_date: row.get(2)?,
+          priority_value: row.get(3)?,
+          submission_status: row.get(4)?,
+          date_added: row.get(5)?,
+          date_finished: row.get(6)?,
         });
     }
 
