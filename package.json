@@ -13,6 +13,7 @@
     "@formkit/auto-animate": "^1.0.0-beta.5",
     "@headlessui/react": "^1.7.7",
     "@next/font": "13.1.2",
+    "@tauri-apps/api": "^1.2.0",
     "@types/node": "18.11.18",
     "@types/react": "18.0.26",
     "@types/react-dom": "18.0.10",

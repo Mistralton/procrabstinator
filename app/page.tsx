@@ -1,20 +1,27 @@
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from './page.module.css'
+'use client'
+
 import Header from './(components)/Header'
 import Navbar from './(components)/Navbar'
-import { ContextProvider } from '@/context/ContextProvider'
+import { Context, ContextProvider } from '@/context/ContextProvider'
 import Table from './(components)/Table'
-
-const inter = Inter({ subsets: ['latin'] })
+import Login from './(components)/Login'
+import { useContext } from 'react'
 
 export default function Home() {
+
+  const context = useContext(Context)
+
   return (
     <>
       <ContextProvider>
-        <Header />
-        <Navbar />
-        <Table />
+        {context?.logged  ?
+          <div>
+            <Header />
+            <Navbar />
+            <Table />
+          </div>
+          :<Login />
+        }
       </ContextProvider>
     </>
   )

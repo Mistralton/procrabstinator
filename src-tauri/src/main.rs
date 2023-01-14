@@ -5,7 +5,9 @@
 
 // use rusqlite::NO_PARAMS;
 use rusqlite::{Connection, Result};
+use serde::Serialize;
 
+#[derive(Serialize)]
 #[derive(Debug)]
 struct Item {
     Id: i32,
@@ -19,7 +21,7 @@ struct Item {
 }
 
 #[tauri::command]
-fn insertItem(
+fn insert_item(
     name: &str,
     due_date: &str,
     priority_val: &str,
@@ -51,7 +53,7 @@ fn insertItemOptional(
 }
 
 #[tauri::command]
-fn getAll() -> Result<()> {
+fn get_all() -> Result<serde_json::Value> {
     let conn = Connection::open("./procrabstinate.db")?;
 
     let mut stmt = conn.prepare("SELECT * FROM Items;")?;
@@ -69,16 +71,43 @@ fn getAll() -> Result<()> {
         })
     })?;
 
+    let mut itemsList = vec![];
+
     for item in queryResult {
-        println!("{:?}", item)
+        itemsList.push(item?);
     }
 
-    Ok(())
+    let itemsList = serde_json::to_value(itemsList).unwrap();
+    Ok(itemsList)
+}
+
+#[tauri::command]
+fn get_item(name: &str) -> Result<serde_json::Value>{
+    let conn = Connection::open("./procrabstinate.db")?;
+
+    let row = conn.query_row("SELECT * FROM Items WHERE Name = ?", rusqlite::params![name], |row| {
+        Ok(Item {
+            Id: row.get(0)?,
+            Name: row.get(1)?,
+            DueDate: row.get(2)?,
+            PriorityValue: row.get(3)?,
+            SubmissionStatus: row.get(4)?,
+            GradeReceived: row.get(5)?,
+            DateAdded: row.get(6)?,
+            DateFinished: row.get(7)?,
+        })
+    })?;
+
+    let item = serde_json::to_value(row).unwrap();
+
+    Ok(item)
 }
 
 fn main() {
-    // tauri::Builder::default()
-    //     .run(tauri::generate_context!())
-    //     .expect("error while running tauri application");
-    insertItem("test", "test", "test", 1, "test");
+    tauri::Builder::default()
+        .invoke_handler(tauri::generate_handler![get_item])
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
+    // insertItem("test", "test", "test", 1, "test");
+    // get_item("test");
 }
