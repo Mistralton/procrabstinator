@@ -4,7 +4,7 @@ import Header from "./(components)/Header";
 import Navbar from "./(components)/Navbar";
 import { Context } from "@/context/ContextProvider";
 import Table from "./(components)/Table";
-import Login from "./(components)/Login";
+import Setup from "./(components)/Setup";
 import { useContext } from "react";
 
 export default function Home() {
@@ -19,7 +19,7 @@ export default function Home() {
           <Table />
         </div>
       ) : (
-        <Login />
+        <Setup />
       )}
     </>
   );
