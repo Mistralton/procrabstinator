@@ -1,6 +1,5 @@
 import Image from "next/image";
 import logo from "../../public/logo.png"
-import { invoke } from '@tauri-apps/api/tauri'
 import { SyntheticEvent, useEffect } from "react";
 import { useContext } from "react";
 import { Context } from "@/context/ContextProvider";
@@ -9,14 +8,6 @@ import { Context } from "@/context/ContextProvider";
 
 export default function Setup() {
   const context = useContext(Context);
-
-  // useEffect(() => {
-  //   async function invokeTest() {
-  //     const ok = await invoke('get_item', { name: 'test' })
-  //     console.log(ok)
-  //   }
-  //   invokeTest()
-  // })
 
   const handleSetup = (e: SyntheticEvent) => {
     e.preventDefault();
