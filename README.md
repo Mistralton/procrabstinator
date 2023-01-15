@@ -1,38 +1,10 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Procrabstinator
 
-## Getting Started
+Procrabstinator is an application extension that aims to provide users with the tools to understand and combat procrastination habits. By inputting due dates and deadlines, Procrabstinator sends notifications ranging from periodic reminders to pop-ups when opening "distracting" applications. The app also tracks the user's history of completing deadlines and provides personalized data on procrastination habits.
 
-First, run the development server:
+Procrabstinator is built with Tauri, utilizing a Next.js UI and a Rust, SQLite, and Axum back-end. The project also includes a browser extension for
+Chromium and Firefox browsers, as well as a landing page built with Astro. With Procrabstinator, take control of your productivity and achieve your goals.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+## Future Prospects
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Some future prospects we have will be to implement deadline types so that it’ll be possible to implement a filter feature to find certain deadlines easier. We also plan to make it compatible with more operating systems as well.
