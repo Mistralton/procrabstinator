@@ -42,7 +42,7 @@ pub fn insert_item(name: &str, due_date: &str, priority_value: &str) -> CommandR
 
 #[command]
 pub fn get_all() -> CommandResult<serde_json::Value> {
-    let conn = Connection::open("./procrabstinate.db")?;
+    let conn = Connection::open("../procrabstinate.db")?;
 
     let mut stmt = conn.prepare("SELECT * FROM Items;")?;
 
