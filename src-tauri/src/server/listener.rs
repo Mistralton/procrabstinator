@@ -41,7 +41,7 @@ pub async fn open_tab_body(body: String) -> String {
     };
     let mut matching_names = Vec::new();
     for tab in tabs {
-        let conn = match Connection::open("./procrabstinate.db") {
+        let conn = match Connection::open("../procrabstinate.db") {
             Ok(conn) => conn,
             Err(e) => {
                 println!("Error opening the database: {:?}", e);

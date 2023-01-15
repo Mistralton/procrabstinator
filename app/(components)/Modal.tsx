@@ -21,12 +21,12 @@ export default function MyModal() {
     event?.preventDefault()
     if (date && name && priority) {
       try {
-        await invoke('insert_item', { name: name, due_date: date, priority_val: priority });
-        closeModal
+        await invoke('insert_item', { name: name, dueDate: date, priorityValue: priority });
+        closeModal()
       } catch (err) {
         console.error(err)
       }
-      
+
     }
     console.log("hi")
   }

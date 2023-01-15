@@ -16,11 +16,16 @@ struct Item {
 }
 
 #[command]
-pub fn insert_item(name: &str, due_date: &str, priority_val: &str) -> CommandResult<()> {
-    let conn = Connection::open("./procrabstinate.db")?;
-
-    conn.execute("INSERT INTO Items (name, due_date, priority_val, submit_status, date_added) values ('test', 'test', 'test', 1, 'test');", []);
-
+pub fn insert_item(name: &str, due_date: &str, priority_value: &str) -> CommandResult<()> {
+    println!("{}", due_date);
+    println!("{}", priority_value);
+    let conn = Connection::open("../procrabstinate.db")?;
+    println!("OKKssfafK");
+    match conn.execute("INSERT INTO Items (name, due_date, priority_value, submission_status, date_added) values ('test', 'test', 'test', 1, 'test');", []) {
+      Ok(updated) => println!("{} rows were updated", updated),
+      Err(err) => println!("update failed: {}", err),
+    }
+    println!("OKKKsfafwawfaf");
     Ok(())
 }
 

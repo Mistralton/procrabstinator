@@ -37,51 +37,51 @@ use super::command_error::{CommandResult};
 //     Ok(())
 // }
 
-#[command]
-pub fn get_all_block() -> CommandResult<serde_json::Value> {
-    let conn = Connection::open("./procrabstinate.db")?;
+// #[command]
+// pub fn get_all_block() -> CommandResult<serde_json::Value> {
+//     let conn = Connection::open("./procrabstinate.db")?;
 
-    let mut stmt = conn.prepare("SELECT * FROM Block;")?;
+//     let mut stmt = conn.prepare("SELECT * FROM Block;")?;
 
-    let query_result = stmt.query_map([], |row| {
-        Ok(Block {
-            app_id: row.get(0)?,
-            name: row.get(1)?,
-            app_type: row.get(2)?,
-            time_spent: row.get(3)?,
-            priority: row.get(4)?,
-        })
-    })?;
+//     let query_result = stmt.query_map([], |row| {
+//         Ok(Block {
+//             app_id: row.get(0)?,
+//             name: row.get(1)?,
+//             app_type: row.get(2)?,
+//             time_spent: row.get(3)?,
+//             priority: row.get(4)?,
+//         })
+//     })?;
 
-    let mut items_list = vec![];
+//     let mut items_list = vec![];
 
-    for item in query_result {
-        items_list.push(item?);
-    }
+//     for item in query_result {
+//         items_list.push(item?);
+//     }
 
-    let items_list = serde_json::to_value(items_list).unwrap();
-    Ok(items_list)
-}
+//     let items_list = serde_json::to_value(items_list).unwrap();
+//     Ok(items_list)
+// }
 
-#[command]
-pub fn get_item_from_block(name: &str) -> CommandResult<serde_json::Value> {
-    let conn = Connection::open("./procrabstinate.db").expect("Connection failed");
+// #[command]
+// pub fn get_item_from_block(name: &str) -> CommandResult<serde_json::Value> {
+//     let conn = Connection::open("./procrabstinate.db").expect("Connection failed");
 
-    let mut stmt = conn.prepare("SELECT * FROM Block where name = ?;")?;
-    let mut rows = stmt.query(rusqlite::params![name])?;
+//     let mut stmt = conn.prepare("SELECT * FROM Block where name = ?;")?;
+//     let mut rows = stmt.query(rusqlite::params![name])?;
 
-    let mut items_list = Vec::new();
+//     let mut items_list = Vec::new();
 
-    while let Some(row) = rows.next()? {
-        items_list.push(Block {
-          app_id: row.get(0)?,
-          name: row.get(1)?,
-          app_type: row.get(2)?,
-          time_spent: row.get(3)?,
-          priority: row.get(4)?,
-        });
-    }
+//     while let Some(row) = rows.next()? {
+//         items_list.push(Block {
+//           app_id: row.get(0)?,
+//           name: row.get(1)?,
+//           app_type: row.get(2)?,
+//           time_spent: row.get(3)?,
+//           priority: row.get(4)?,
+//         });
+//     }
 
-    let items_list = serde_json::to_value(items_list).unwrap();
-    Ok(items_list)
-}
+//     let items_list = serde_json::to_value(items_list).unwrap();
+//     Ok(items_list)
+// }
