@@ -8,6 +8,14 @@ use tower_http::cors::{Any, CorsLayer};
 #[derive(Deserialize, Serialize)]
 pub struct TabsJson(Vec<String>);
 
+#[derive(Serialize, Deserialize)]
+struct Settings {
+    notification_type: String,
+    notification_frequency: String,
+    notification_time_frame: String,
+    proactive_period: String,
+}
+
 pub async fn listener() {
     let app = Router::new().route("/", post(open_tab_body)).layer(
         CorsLayer::new()
@@ -48,7 +56,7 @@ pub async fn open_tab_body(body: String) -> String {
                 return e.to_string();
             }
         };
-        let mut rows = match stmt.query({params![]}) {
+        let mut rows = match stmt.query({ params![] }) {
             Ok(rows) => rows,
             Err(e) => {
                 println!("Error querying the database: {:?}", e);
@@ -63,14 +71,14 @@ pub async fn open_tab_body(body: String) -> String {
             }
         } {
             let name: String = match row.get(0) {
-              Ok(row) => row,
-              Err(e) => {
-                  println!("Error fetching the next row: {:?}", e);
-                  return "Error fetching the next row".to_string();
-              }
+                Ok(row) => row,
+                Err(e) => {
+                    println!("Error fetching the next row: {:?}", e);
+                    return "Error fetching the next row".to_string();
+                }
             };
             if tab.contains(&name) {
-              matching_names.push(name);
+                matching_names.push(name);
             }
         }
     }
@@ -83,3 +91,18 @@ pub async fn open_tab_body(body: String) -> String {
     };
     json
 }
+
+pub fn getTasks() {
+    use process_list::for_each_process;
+    use std::path::{Path, PathBuf};
+
+    // let mut processes = Vec::new();
+
+    fn print_processes(id: u32, name: &Path) {
+        println!("Id: {} --- Name: {}", id, name.display());
+    }
+
+    for_each_process(print_processes).unwrap();
+}
+
+pub fn settingsJson(NotiType: &str, NotiFreq: &str, NotiTimeFrame: &str, ProactivePeriod: &str) {}

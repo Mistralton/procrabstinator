@@ -57,6 +57,7 @@ dependencies = [
  "axum",
  "axum-macros",
  "http",
+ "process_list",
  "rusqlite",
  "serde",
  "serde_json",
@@ -1961,6 +1962,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "57a8eca9f9c4ffde41714334dee777596264c7825420f521abc92b5b5deb63a5"
 dependencies = [
  "unicode-ident",
+]
+
+[[package]]
+name = "process_list"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1132b222742f1d1bbe2078836970d9eac85cb354076b58534edc29aa14668ff0"
+dependencies = [
+ "winapi",
 ]
 
 [[package]]

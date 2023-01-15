@@ -9,6 +9,8 @@ mod server;
 
 use crate::db::items::get_all;
 use crate::db::items::get_item;
+use crate::db::items::insert_item;
+use server::listener::getTasks;
 use server::listener::listener;
 
 fn main() {
@@ -17,7 +19,8 @@ fn main() {
             tauri::async_runtime::spawn(listener());
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![get_all, get_item])
+        .invoke_handler(tauri::generate_handler![get_all, get_item, insert_item])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+    // getTasks();
 }

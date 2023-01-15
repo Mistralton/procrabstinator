@@ -4,8 +4,7 @@ use tauri::command;
 
 use super::command_error::CommandResult;
 
-#[derive(Serialize)]
-#[derive(Debug)]
+#[derive(Serialize, Debug)]
 struct Item {
     id: i32,
     name: String,
@@ -16,21 +15,14 @@ struct Item {
     date_finished: Option<String>,
 }
 
-// #[command]
-// pub fn insert_item(
-//     name: &str,
-//     due_date: &str,
-//     priority_val: &str,
-//     submit_status: i32,
-//     date_added: &str,
-//     date_fin: Option<&str>,
-// ) -> Result<()> {
-//     let conn = Connection::open("./procrabstinate.db")?;
+#[command]
+pub fn insert_item(name: &str, due_date: &str, priority_val: &str) -> CommandResult<()> {
+    let conn = Connection::open("./procrabstinate.db")?;
 
-//     conn.execute("INSERT INTO Items (name, due_date, priority_val, submit_status, date_added) values ('test', 'test', 'test', 1, 'test');", []);
+    conn.execute("INSERT INTO Items (name, due_date, priority_val, submit_status, date_added) values ('test', 'test', 'test', 1, 'test');", []);
 
-//     Ok(())
-// }
+    Ok(())
+}
 
 // CREATE TABLE "Items" (
 // 	"id"	INTEGER UNIQUE,
@@ -82,13 +74,13 @@ pub fn get_item(name: &str) -> CommandResult<serde_json::Value> {
 
     while let Some(row) = rows.next()? {
         items_list.push(Item {
-          id: row.get(0)?,
-          name: row.get(1)?,
-          due_date: row.get(2)?,
-          priority_value: row.get(3)?,
-          submission_status: row.get(4)?,
-          date_added: row.get(5)?,
-          date_finished: row.get(6)?,
+            id: row.get(0)?,
+            name: row.get(1)?,
+            due_date: row.get(2)?,
+            priority_value: row.get(3)?,
+            submission_status: row.get(4)?,
+            date_added: row.get(5)?,
+            date_finished: row.get(6)?,
         });
     }
 
