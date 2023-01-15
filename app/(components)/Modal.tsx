@@ -1,6 +1,7 @@
 "use client";
 import { Dialog, Transition } from "@headlessui/react";
 import { FormEvent, Fragment, useState } from "react";
+import { invoke } from '@tauri-apps/api/tauri'
 
 export default function MyModal() {
   let [isOpen, setIsOpen] = useState(false);
@@ -16,9 +17,18 @@ export default function MyModal() {
   const [date, setDate] = useState("");
   const [priority, setPriority] = useState("");
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event?.preventDefault()
-    if (date && name && priority) closeModal
+    if (date && name && priority) {
+      try {
+        await invoke('insert_item', { name: name, due_date: date, priority_val: priority });
+        closeModal
+      } catch (err) {
+        console.error(err)
+      }
+      
+    }
+    console.log("hi")
   }
   return (
     <>
@@ -64,7 +74,7 @@ export default function MyModal() {
                   >
                     Enter A New Task
                   </Dialog.Title>
-                  <form className="m-4 w-full" onSubmit={handleSubmit}>
+                  <form className="m-4 w-full" onSubmit={async (e) => await handleSubmit(e)}>
                     <div className="grid grid-cols-2 gap-8 place-items-center text-left mr-16">
                       <p className="w-28">Task Name:</p>
                       <input
@@ -90,7 +100,6 @@ export default function MyModal() {
                         className="w-full m-2"
                         placeholder={"0"}
                         required
-                        pattern="/^[0-9]+$/"
                         onChange={(e) => setPriority(e.target.value)}
                       />
                     </div>
