@@ -16,7 +16,7 @@ export default function Home() {
         <div>
           <Header />
           <Navbar />
-          <Table />
+          <Table type={"todos"} />
         </div>
       ) : (
         <Setup />

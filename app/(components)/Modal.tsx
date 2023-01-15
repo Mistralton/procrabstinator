@@ -15,20 +15,15 @@ export default function MyModal() {
   }
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
+  const [type, setType] = useState("");
   const [priority, setPriority] = useState("");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event?.preventDefault()
-    if (date && name && priority) {
-      try {
-        await invoke('insert_item', { name: name, dueDate: date, priorityValue: priority });
-        closeModal()
-      } catch (err) {
-        console.error(err)
-      }
-
+    if (date && name && priority && type) {
+      await invoke('insert_item', { name: name, dueDate: date, priorityValue: priority, itemType: type });
+      closeModal()
     }
-    console.log("hi")
   }
   return (
     <>
@@ -83,6 +78,14 @@ export default function MyModal() {
                         required
                         type={"string"}
                         onChange={(e) => setName(e.target.value)}
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-8 place-items-center text-left mr-16">
+                      <p className="w-28">Task Type:</p>
+                      <input
+                        className="w-full m-2"
+                        required
+                        onChange={(e) => setType(e.target.value)}
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-8 place-items-center text-left mr-16">

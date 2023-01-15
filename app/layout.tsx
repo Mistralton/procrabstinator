@@ -9,7 +9,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head />
-      <body className="w-screen h-screen bg-[#8B4000] relative font-RedHat">
+      <body className="w-screen h-screen bg-[#8B4000] relative font-RedHat overflow-hidden">
         <ContextProvider>{children}</ContextProvider>
       </body>
     </html>

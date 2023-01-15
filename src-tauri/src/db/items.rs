@@ -1,4 +1,4 @@
-use rusqlite::{Connection, Result};
+use rusqlite::{Connection, params};
 use serde::Serialize;
 use tauri::command;
 
@@ -11,21 +11,19 @@ struct Item {
     due_date: String,
     priority_value: String,
     submission_status: i32,
+    item_type: String,
     date_added: String,
     date_finished: Option<String>,
 }
 
 #[command]
-pub fn insert_item(name: &str, due_date: &str, priority_value: &str) -> CommandResult<()> {
-    println!("{}", due_date);
-    println!("{}", priority_value);
+pub fn insert_item(name: &str, due_date: &str, priority_value: &str, item_type: &str) -> CommandResult<()> {
     let conn = Connection::open("../procrabstinate.db")?;
-    println!("OKKssfafK");
-    match conn.execute("INSERT INTO Items (name, due_date, priority_value, submission_status, date_added) values ('test', 'test', 'test', 1, 'test');", []) {
+    match conn.execute("INSERT INTO Items (name, due_date, priority_value, submission_status, date_added, item_type) values (?,?,?, 0, datetime('now'),?);",
+    params![name, due_date, priority_value, item_type]) {
       Ok(updated) => println!("{} rows were updated", updated),
       Err(err) => println!("update failed: {}", err),
     }
-    println!("OKKKsfafwawfaf");
     Ok(())
 }
 
@@ -55,6 +53,7 @@ pub fn get_all() -> CommandResult<serde_json::Value> {
             submission_status: row.get(4)?,
             date_added: row.get(5)?,
             date_finished: row.get(6)?,
+            item_type: row.get(7)?
         })
     })?;
 
@@ -86,6 +85,7 @@ pub fn get_item(name: &str) -> CommandResult<serde_json::Value> {
             submission_status: row.get(4)?,
             date_added: row.get(5)?,
             date_finished: row.get(6)?,
+            item_type: row.get(7)?
         });
     }
 
