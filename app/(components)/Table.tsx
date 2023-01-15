@@ -1,6 +1,8 @@
 import { invoke } from "@tauri-apps/api/tauri";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
+import trash from "../../public/trash.png"
 
 interface toDo {
   date_added: string;
@@ -30,19 +32,18 @@ export default function Table({ type }: Props) {
 
   const [map, setMap] = useState<toDo[] | tab[]>([]);
   const [itemOffset, setItemOffset] = useState(0);
-
-  useEffect(() => {
-    async function gather() {
-      if (type === "todos") {
-        const toDos: toDo[] = await invoke("get_all");
-        setMap(toDos);
-      }
-      if (type === "tabs") {
-        const tabs: tab[] = await invoke("gather_blocked_tabs");
-        console.log(tabs);
-        setMap(tabs);
-      }
+  async function gather() {
+    if (type === "todos") {
+      const toDos: toDo[] = await invoke("get_all");
+      setMap(toDos);
     }
+    if (type === "tabs") {
+      const tabs: tab[] = await invoke("gather_blocked_tabs");
+      console.log(tabs);
+      setMap(tabs);
+    }
+  }
+  useEffect(() => {
     gather();
     setInterval(() => {
       gather();
@@ -55,16 +56,34 @@ export default function Table({ type }: Props) {
   const currentItems = map.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(map.length / 10);
 
-  const handlePageClick = (event) => {
+  const handlePageClick = (event: any ) => {
     const newOffset = (event.selected * 10) % map.length;
     console.log(
       `User requested page number ${event.selected}, which is offset ${newOffset}`
     );
     setItemOffset(newOffset);
   };
+
+  function getTimeUntil(ms: number) {
+    let seconds = (ms / 1000).toFixed(1);
+    let minutes = (ms / (1000 * 60)).toFixed(1);
+    let hours = (ms / (1000 * 60 * 60)).toFixed(1);
+    let days = (ms / (1000 * 60 * 60 * 24)).toFixed(1);
+    if (Number(seconds) < 60) return seconds + " Sec";
+    else if (Number(minutes) < 60) return minutes + " Min";
+    else if (Number(hours) < 24) return hours + " Hrs";
+    else return days + " Days"
+  }
+
+  async function deleter(id: string, table: string) {
+    await invoke("delete_item", { id: id, table: table })
+    gather();
+  }
+
   return (
     <div className="p-4 w-[calc(100%-9rem)] float-right flex flex-col items-center text-white m-4">
-      <h2 className="font-bold text-3xl mb-4">Upcoming</h2>
+      {type === "todos" && <h2 className="font-bold text-3xl mb-4">Upcoming</h2> }
+      {type === "tabs" && <h2 className="font-bold text-3xl mb-4">Blocked Apps/Websites</h2> }
       <table className="table-fixed md:w-[36rem] lg:w-[48rem] text-center border-separate border-spacing-5 py-4">
         <thead className="p-4">
           <tr>
@@ -75,7 +94,8 @@ export default function Table({ type }: Props) {
                 <th>Due Date</th>
                 <th>Priority</th>
                 <th>Submitted</th>
-                <th>Added</th>
+                <th>Time Until Due</th>
+                <th className="w-2"></th>
               </>
             )}
             {type === "tabs" && (
@@ -84,6 +104,7 @@ export default function Table({ type }: Props) {
                 <th>App Type</th>
                 <th>Time Spent</th>
                 <th>Date Added</th>
+                <th className="w-2"></th>
               </>
             )}
           </tr>
@@ -109,8 +130,9 @@ export default function Table({ type }: Props) {
                     <p>{todo.submission_status}</p>
                   </td>
                   <td>
-                    <p>{todo.date_added}</p>
+                    <p>{(getTimeUntil(Date.parse(todo.due_date) - Date.now()))}</p>
                   </td>
+                  <td><button className="absolute -right-3 bottom-0" onClick={() => deleter(String(todo.id), 'Items')}><Image src={trash} alt="trash"/></button></td>
                 </tr>
               );
             })}
@@ -130,6 +152,7 @@ export default function Table({ type }: Props) {
                   <td>
                     <p>{tab.date_added}</p>
                   </td>
+                  <td><button className="absolute -right-3 bottom-0" onClick={() => deleter(String(tab.app_id), 'Block')}><Image src={trash} alt="trash"/></button></td>
                 </tr>
               );
             })}

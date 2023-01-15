@@ -84,6 +84,57 @@ pub async fn open_tab_body(body: String) -> String {
     json
 }
 
+#[axum_macros::debug_handler]
+pub async fn getDueDates() -> String {
+    let mut due_dates = Vec::new();
+    let query = format!("SELECT name FROM Items");
+    let conn = match Connection::open("../procrabstinate.db") {
+        Ok(conn) => conn,
+        Err(e) => {
+            println!("Error opening the database: {:?}", e);
+            return "Error opening the database".to_string();
+        }
+    };
+    let mut stmt = match conn.prepare(&query) {
+        Ok(stmt) => stmt,
+        Err(e) => {
+            println!("Error preparing statement: {:?}", e);
+            return e.to_string();
+        }
+    };
+    let mut rows = match stmt.query({ params![] }) {
+        Ok(rows) => rows,
+        Err(e) => {
+            println!("Error querying the database: {:?}", e);
+            return "Error querying the database".to_string();
+        }
+    };
+    while let Some(row) = match rows.next() {
+        Ok(row) => row,
+        Err(e) => {
+            println!("Error fetching the next row: {:?}", e);
+            return "Error fetching the next row".to_string();
+        }
+    } {
+        let due_date: String = match row.get(0) {
+            Ok(row) => row,
+            Err(e) => {
+                println!("Error fetching the next row: {:?}", e);
+                return "Error fetching the next row".to_string();
+            }
+        };
+        due_dates.push(due_date)
+    }
+    let json = match serde_json::to_string(&due_dates) {
+        Ok(json) => json,
+        Err(e) => {
+            println!("Error serializing json: {:?}", e);
+            return "Error serializing json".to_string();
+        }
+    };
+    json
+}
+
 // get active tasks
 pub fn getTasks() {
     use process_list::for_each_process;

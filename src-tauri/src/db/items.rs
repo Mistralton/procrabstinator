@@ -17,6 +17,23 @@ struct Item {
 }
 
 #[command]
+pub fn delete_item(id: &str, table: &str) -> CommandResult<()> {
+    let conn = Connection::open("../procrabstinate.db")?;
+    if (table == "Items") {
+        match conn.execute("DELETE FROM Items WHERE id = ?;", params![id]) {
+            Ok(updated) => println!("{} rows were updated", updated),
+            Err(err) => println!("update failed: {}", err),
+          }
+    } else {
+        match conn.execute("DELETE FROM Block WHERE app_id = ?;", params![id]) {
+            Ok(updated) => println!("{} rows were updated", updated),
+            Err(err) => println!("update failed: {}", err),
+          }
+    }
+    Ok(())
+}
+
+#[command]
 pub fn insert_item(name: &str, due_date: &str, priority_value: &str, item_type: &str) -> CommandResult<()> {
     let conn = Connection::open("../procrabstinate.db")?;
     match conn.execute("INSERT INTO Items (name, due_date, priority_value, submission_status, date_added, item_type) values (?,?,?, 0, datetime('now'),?);",
@@ -24,6 +41,7 @@ pub fn insert_item(name: &str, due_date: &str, priority_value: &str, item_type: 
       Ok(updated) => println!("{} rows were updated", updated),
       Err(err) => println!("update failed: {}", err),
     }
+
     Ok(())
 }
 
@@ -64,6 +82,7 @@ pub fn get_all() -> CommandResult<serde_json::Value> {
     }
 
     let items_list = serde_json::to_value(items_list).unwrap();
+
     Ok(items_list)
 }
 
@@ -90,5 +109,6 @@ pub fn get_item(name: &str) -> CommandResult<serde_json::Value> {
     }
 
     let items_list = serde_json::to_value(items_list).unwrap();
+
     Ok(items_list)
 }
