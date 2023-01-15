@@ -39,7 +39,6 @@ export default function Table({ type }: Props) {
     }
     if (type === "tabs") {
       const tabs: tab[] = await invoke("gather_blocked_tabs");
-      console.log(tabs);
       setMap(tabs);
     }
   }
@@ -47,33 +46,28 @@ export default function Table({ type }: Props) {
     gather();
     setInterval(() => {
       gather();
-      console.log("is all good and gather");
     }, 3000);
   }, []);
 
   const endOffset = itemOffset + 10;
-  console.log(`Loading items from ${itemOffset} to ${endOffset}`);
   const currentItems = map.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(map.length / 10);
 
   const handlePageClick = (event: any ) => {
     const newOffset = (event.selected * 10) % map.length;
-    console.log(
-      `User requested page number ${event.selected}, which is offset ${newOffset}`
-    );
     setItemOffset(newOffset);
   };
 
-  function getTimeUntil(ms: number) {
-    let seconds = (ms / 1000).toFixed(1);
-    let minutes = (ms / (1000 * 60)).toFixed(1);
-    let hours = (ms / (1000 * 60 * 60)).toFixed(1);
-    let days = (ms / (1000 * 60 * 60 * 24)).toFixed(1);
-    if (Number(seconds) < 60) return seconds + " Sec";
-    else if (Number(minutes) < 60) return minutes + " Min";
-    else if (Number(hours) < 24) return hours + " Hrs";
-    else return days + " Days"
-  }
+  // function getTimeUntil(ms: number) {
+  //   let seconds = (ms / 1000).toFixed(1);
+  //   let minutes = (ms / (1000 * 60)).toFixed(1);
+  //   let hours = (ms / (1000 * 60 * 60)).toFixed(1);
+  //   let days = (ms / (1000 * 60 * 60 * 24)).toFixed(1);
+  //   if (Number(seconds) < 60) return seconds + " Sec";
+  //   else if (Number(minutes) < 60) return minutes + " Min";
+  //   else if (Number(hours) < 24) return hours + " Hrs";
+  //   else return days + " Days"
+  // }
 
   async function deleter(id: string, table: string) {
     await invoke("delete_item", { id: id, table: table })
@@ -93,8 +87,8 @@ export default function Table({ type }: Props) {
                 <th>Type</th>
                 <th>Due Date</th>
                 <th>Priority</th>
-                <th>Submitted</th>
-                <th>Time Until Due</th>
+                {/* <th>Submitted</th> */}
+                {/* <th>Time Until Due</th> */}
                 <th className="w-2"></th>
               </>
             )}
@@ -126,12 +120,12 @@ export default function Table({ type }: Props) {
                   <td>
                     <p>{todo.priority_value}</p>
                   </td>
-                  <td>
+                  {/* <td>
                     <p>{todo.submission_status}</p>
-                  </td>
-                  <td>
+                  </td> */}
+                  {/* <td>
                     <p>{(getTimeUntil(Date.parse(todo.due_date) - Date.now()))}</p>
-                  </td>
+                  </td> */}
                   <td><button className="absolute -right-3 bottom-0" onClick={() => deleter(String(todo.id), 'Items')}><Image src={trash} alt="trash"/></button></td>
                 </tr>
               );
