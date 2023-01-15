@@ -1,7 +1,7 @@
 import Image from "next/image";
 import logo from "../../public/logo.png"
 import { invoke } from '@tauri-apps/api/tauri'
-import { useEffect } from "react";
+import { SyntheticEvent, useEffect } from "react";
 import { useContext } from "react";
 import { Context } from "@/context/ContextProvider";
 
