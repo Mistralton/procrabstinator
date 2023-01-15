@@ -8,14 +8,6 @@ use tower_http::cors::{Any, CorsLayer};
 #[derive(Deserialize, Serialize)]
 pub struct TabsJson(Vec<String>);
 
-#[derive(Serialize, Deserialize)]
-struct Settings {
-    notification_type: String,
-    notification_frequency: String,
-    notification_time_frame: String,
-    proactive_period: String,
-}
-
 pub async fn listener() {
     let app = Router::new().route("/", post(open_tab_body)).layer(
         CorsLayer::new()
@@ -92,6 +84,7 @@ pub async fn open_tab_body(body: String) -> String {
     json
 }
 
+// get active tasks
 pub fn getTasks() {
     use process_list::for_each_process;
     use std::path::{Path, PathBuf};
@@ -104,5 +97,3 @@ pub fn getTasks() {
 
     for_each_process(print_processes).unwrap();
 }
-
-pub fn settingsJson(NotiType: &str, NotiFreq: &str, NotiTimeFrame: &str, ProactivePeriod: &str) {}
