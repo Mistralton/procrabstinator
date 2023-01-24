@@ -1,5 +1,7 @@
 # Procrabstinator
 
+[This is the link to the landing page repository](https://github.com/Mistralton/procrabstinator-website)
+
 Procrabstinator is an application extension that aims to provide users with the tools to understand and combat procrastination habits. By inputting due dates and deadlines, Procrabstinator sends notifications ranging from periodic reminders to pop-ups when opening "distracting" applications. The app also tracks the user's history of completing deadlines and provides personalized data on procrastination habits.
 
 Procrabstinator is built with Tauri, utilizing a Next.js UI and a Rust, SQLite, and Axum back-end. The project also includes a browser extension for
